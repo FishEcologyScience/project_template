@@ -26,8 +26,10 @@ library('patchwork') #Add plots together
 #----------------------------#
 ###Lab package
 #Only need to install during updates
-# devtools::install_github("pbzonek/telemetrytoolsFESL")
-library('telemetrytoolsFESL')
+devtools::install_github("FishEcologyScience/FESLtelemetry")
+library('FESLtelemetry')
+#library('telemetrytoolsFESL')
+
 
 ###GLATOS package
 #remotes::install_github("jsta/glatos")
@@ -35,7 +37,7 @@ library('telemetrytoolsFESL')
 
 ###Source functions
 #----------------------------#
-source("02 - Scripts/01 - Functions/Function1-1_HelperFunctions.R")
+source("02_scripts/01_functions/function01-01_helper_functions.R")
 
 ###Adjust Settings
 #----------------------------#
