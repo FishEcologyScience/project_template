@@ -18,8 +18,9 @@
 ## --------------------------------------------------------------#
 
 
+
 #-------------------------------------------------------------#
-#####func_source_clean ####################################----
+#####fct_source_clean ####################################----
 #-------------------------------------------------------------#
 #' Source R scripts with verbosity control
 #'
@@ -64,20 +65,22 @@
 #'
 #' @examples
 #' # Minimal output (just progress)
-#' func_source_clean("02 - Scripts/Script1-1_format_data.R", level = "minimal")
+#' fct_source_clean("02 - Scripts/Script1-1_format_data.R", level = "minimal")
 #'
 #' # Full debugging with code and output
-#' func_source_clean("02 - Scripts/Script1-1_format_data.R", level = "debug")
+#' fct_source_clean("02 - Scripts/Script1-1_format_data.R", level = "debug")
 #'
 #' # Completely silent
-#' func_source_clean("02 - Scripts/Script1-1_format_data.R", level = "silent")
+#' fct_source_clean("02 - Scripts/Script1-1_format_data.R", level = "silent")
 #'
 #' # Using with a global parameter
 #' param_verbose <- "minimal"
-#' func_source_clean("02 - Scripts/Script1-1_format_data.R", level = param_verbose)
+#' fct_source_clean("02 - Scripts/Script1-1_format_data.R", level = param_verbose)
 #'
 #' @export
-func_source_clean <- function(file, level = "minimal", beep_on_complete = FALSE, beep_on_error = FALSE) {
+
+
+fct_source_clean <- function(file, level = "minimal", beep_on_complete = FALSE, beep_on_error = FALSE) {
 
   #----------------------------
   # 1. Validate inputs
@@ -160,8 +163,11 @@ func_source_clean <- function(file, level = "minimal", beep_on_complete = FALSE,
   }
 }
 
+ 
+
+
 #-------------------------------------------------------------#
-#####fct_cite_packages_grateful ############################---
+#####fct_cite_packages ############################---
 #-------------------------------------------------------------#
 #' Generate BibTeX citations for R packages used in a project (via {grateful})
 #'
@@ -196,16 +202,18 @@ func_source_clean <- function(file, level = "minimal", beep_on_complete = FALSE,
 #'
 #' @examples
 #' # Repo-wide scan (recommended default)
-#' # fct_cite_packages_grateful()
+#' # fct_cite_packages()
 #'
 #' # Scan only the load-packages script
-#' # fct_cite_packages_grateful(scan = "file")
+#' # fct_cite_packages(scan = "file")
 #'
 #' # Scan any specific script/report
-#' # fct_cite_packages_grateful(scan = "file", file = "02_scripts/scriptXX-XX_my_script.R")
+#' # fct_cite_packages(scan = "file", file = "02_scripts/scriptXX-XX_my_script.R")
 #'
 #' @export
-fct_cite_packages_grateful <- function(
+
+
+fct_cite_packages <- function(
   scan = c("repo", "file"),
   file = "02_scripts/script00-01_load_packages.R",
   out_dir = "03_outputs/02_files",
