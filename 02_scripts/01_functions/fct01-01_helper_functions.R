@@ -18,8 +18,9 @@
 ## --------------------------------------------------------------#
 
 
+
 #-------------------------------------------------------------#
-#####func_source_clean ####################################----
+#####fct_source_clean ####################################----
 #-------------------------------------------------------------#
 #' Source R scripts with verbosity control
 #'
@@ -64,20 +65,22 @@
 #'
 #' @examples
 #' # Minimal output (just progress)
-#' func_source_clean("02 - Scripts/Script1-1_format_data.R", level = "minimal")
+#' fct_source_clean("02 - Scripts/Script1-1_format_data.R", level = "minimal")
 #'
 #' # Full debugging with code and output
-#' func_source_clean("02 - Scripts/Script1-1_format_data.R", level = "debug")
+#' fct_source_clean("02 - Scripts/Script1-1_format_data.R", level = "debug")
 #'
 #' # Completely silent
-#' func_source_clean("02 - Scripts/Script1-1_format_data.R", level = "silent")
+#' fct_source_clean("02 - Scripts/Script1-1_format_data.R", level = "silent")
 #'
 #' # Using with a global parameter
 #' param_verbose <- "minimal"
-#' func_source_clean("02 - Scripts/Script1-1_format_data.R", level = param_verbose)
+#' fct_source_clean("02 - Scripts/Script1-1_format_data.R", level = param_verbose)
 #'
 #' @export
-func_source_clean <- function(file, level = "minimal", beep_on_complete = FALSE, beep_on_error = FALSE) {
+
+
+fct_source_clean <- function(file, level = "minimal", beep_on_complete = FALSE, beep_on_error = FALSE) {
 
   #----------------------------
   # 1. Validate inputs
@@ -158,4 +161,133 @@ func_source_clean <- function(file, level = "minimal", beep_on_complete = FALSE,
   if (beep_on_complete) {
     beepr::beep(sound = 1)  # Completion beep
   }
+}
+
+ 
+
+
+#-------------------------------------------------------------#
+#####fct_cite_packages ############################---
+#-------------------------------------------------------------#
+#' Generate BibTeX citations for R packages used in a project (via {grateful})
+#'
+#' @description
+#' Creates a BibTeX bibliography of R package citations using the {grateful} package.
+#' By default, it scans the full repository (recommended). Optionally, it can scan a
+#' single script/report file (e.g., the load-packages script).
+#'
+#' Outputs default to the project outputs files folder (\code{03_outputs/02_files/}).
+#'
+#' @param scan Character string specifying scan mode. Must be one of:
+#'   \itemize{
+#'     \item \code{"repo"} - Scan the full repository (default; better default)
+#'     \item \code{"file"} - Scan a single file specified by \code{file}
+#'   }
+#' @param file Character string path to a file to scan when \code{scan = "file"}.
+#'   Defaults to the load-packages script in \code{02_scripts/}.
+#' @param out_dir Character string output directory for BibTeX and report files.
+#'   Defaults to \code{"03_outputs/02_files"}.
+#' @param bib_file Character string name of the BibTeX output file.
+#'   Defaults to \code{"packages.bib"}.
+#' @param report_file Character string base name for the human-readable report file
+#'   (extension added via \code{report_format}). Defaults to \code{"package-citations"}.
+#' @param report_format Character string output format for the report. Defaults to \code{"md"}.
+#'
+#' @return Invisibly returns the path to the BibTeX file written.
+#'
+#' @details
+#' Repo-wide scanning uses \code{pkgs = "All"} in \code{grateful::cite_packages()}.
+#' Script-specific scanning uses \code{pkgs = <file>} and defaults to the project
+#' load-packages script.
+#'
+#' @examples
+#' # Repo-wide scan (recommended default)
+#' # fct_cite_packages()
+#'
+#' # Scan only the load-packages script
+#' # fct_cite_packages(scan = "file")
+#'
+#' # Scan any specific script/report
+#' # fct_cite_packages(scan = "file", file = "02_scripts/scriptXX-XX_my_script.R")
+#'
+#' @export
+
+
+fct_cite_packages <- function(
+  scan = c("repo", "file"),
+  file = "02_scripts/script00-01_load_packages.R",
+  out_dir = "03_outputs/02_files",
+  bib_file = "packages.bib",
+  report_file = "package-citations",
+  report_format = "md"
+) {
+ 
+ # 1) Validate arguments -------------------------------------------------------
+ # match.arg() ensures scan is exactly "repo" or "file"
+ # and sets the default to the first option ("repo").
+ scan <- match.arg(scan)
+ 
+ # 2) Check dependency --------------------------------------------------------
+ # We require {grateful} because the actual citation generation happens there.
+ # If it isn't installed, we stop with a clear message.
+ if (!requireNamespace("grateful", quietly = TRUE)) {
+  stop(
+   "Package 'grateful' is required. Install it with install.packages('grateful').",
+   call. = FALSE
+  )
+ }
+ 
+ # 3) Define project root and output location ---------------------------------
+ # We assume the working directory is the project root (typical RStudio project usage).
+ root <- normalizePath(getwd(), mustWork = TRUE)
+ 
+ # Build full output directory path and create it if it doesn't exist yet.
+ # Example default: "<project_root>/03_outputs/02_files"
+ out_dir_full <- file.path(root, out_dir)
+ if (!dir.exists(out_dir_full)) {
+  dir.create(out_dir_full, recursive = TRUE)
+ }
+ 
+ # 4) Decide what to scan for packages ----------------------------------------
+ # "repo" mode:
+ #   - pkgs = "All" tells grateful/renv to scan the whole repository recursively.
+ #
+ # "file" mode:
+ #   - pkgs = <path_to_file> tells grateful to scan ONLY that one file.
+ #   - default file points to the load-packages script.
+ if (scan == "repo") {
+  pkgs_arg <- "All"
+ } else {
+  file_full <- file.path(root, file)
+  
+  # If the file isn't found, fall back to repo-wide scanning so the function still works.
+  if (!file.exists(file_full)) {
+   warning("File not found: ", file, " — falling back to repo-wide scan.")
+   pkgs_arg <- "All"
+  } else {
+   pkgs_arg <- normalizePath(file_full, mustWork = TRUE)
+  }
+ }
+ 
+ # 5) Generate outputs --------------------------------------------------------
+ # grateful writes TWO things when output = "file":
+ #   (a) A BibTeX file (bib.file) -> used by Quarto/R Markdown as a bibliography
+ #   (b) A readable report (out.file + out.format) -> quick human check
+ #
+ # Default outputs:
+ #   03_outputs/02_files/packages.bib
+ #   03_outputs/02_files/package-citations.md
+ grateful::cite_packages(
+  pkgs = pkgs_arg,
+  output = "file",
+  out.dir = out_dir_full,
+  bib.file = bib_file,
+  out.file = report_file,
+  out.format = report_format,
+  root = root
+ )
+ 
+ # 6) Return value -------------------------------------------------------------
+ # Return the path to the BibTeX file (invisibly, so it doesn't spam console).
+ invisible(file.path(out_dir_full, bib_file))
 }

@@ -123,8 +123,8 @@ folder organization, and R object naming.
 
 -   Scripts: `scriptXX-YY_descriptive_name.R` (e.g.,
     `script02-01_analysis_rf.R`)
--   Functions: `functionXX-YY_descriptive_name.R` (e.g.,
-    `function01-01_helper_functions.R`)
+-   Functions: `fctXX-YY_descriptive_name.R` (e.g.,
+    `fct01-01_helper_functions.R`)
 -   Folders: `XX_descriptive_name/` (e.g., `01_data/`, `02_scripts/`)
 -   All lowercase with underscores
 
