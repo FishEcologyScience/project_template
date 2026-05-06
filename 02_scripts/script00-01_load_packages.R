@@ -41,6 +41,7 @@ library('FESLtelemetry')
 ### Source functions
 #----------------------------#
 source("02_scripts/01_functions/fct01-01_helper_functions.R")
+source("02_scripts/01_functions/fct01-02_git_functions.R")
 
 
 
