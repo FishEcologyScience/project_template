@@ -14,7 +14,10 @@ built-in Git LFS support for large files.
 ```
 Project/
 ├── 01_data/
-│   └── 01_large_files/            # Large datasets tracked via Git LFS
+│   ├── 01_raw_files/              # Original, unmodified datasets
+│   ├── 02_processed_files/        # Cleaned or transformed datasets
+│   ├── 03_large_files_LFS/        # Large datasets tracked via Git LFS
+│   └── 04_gitignore_files/        # Local-only files, never committed
 ├── 02_scripts/
 │   └── 01_functions/              # Reusable R functions
 ├── 03_outputs/
@@ -53,7 +56,7 @@ git lfs install
 ### 3. Start Working
 
 -   Add data files to `01_data/` (large files go in
-    `01_large_files/`)
+    `03_large_files_LFS/`)
 -   Create analysis scripts in `02_scripts/`
 -   Store custom functions in `02_scripts/01_functions/`
 -   Generated outputs automatically go to `03_outputs/`
@@ -64,7 +67,7 @@ git lfs install
 
 Store all input data files here: - **Raw data**: Original, unmodified
 datasets - **Processed data**: Cleaned or transformed datasets -
-**`01_large_files/`**: Large datasets automatically tracked via Git
+**`03_large_files_LFS/`**: Large datasets automatically tracked via Git
 LFS
 
 ### `02_scripts/`
@@ -105,7 +108,7 @@ See `.gitignore` for complete list: - R session files (`.RData`,
 
 ### Git LFS
 
-Files in `01_data/01_large_files/` are automatically tracked via Git
+Files in `01_data/03_large_files_LFS/` are automatically tracked via Git
 LFS: - Prevents repository bloat from large datasets - Maintains version
 control for large files - Works transparently once configured
 

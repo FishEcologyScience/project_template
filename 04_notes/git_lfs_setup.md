@@ -44,7 +44,15 @@ This sets up the necessary Git hooks to make LFS work automatically.
 This repository is **already configured** for Git LFS via the `.gitattributes` file.
 
 The following directory is tracked by LFS:
-- `01 - Data/01 - Large Files/**` (all files in this folder)
+- `01_data/03_large_files_LFS/**` (all files in this folder)
+
+**Copying this template into an existing repo?** Make sure `.gitattributes` comes across too. A repo created on GitHub may already have its own default `.gitattributes` (containing only `* text=auto`), and that file has no LFS rule. Without the LFS rule, files in the large files folder are committed as regular Git files, and GitHub rejects any file over 100 MB on push.
+
+To confirm LFS will pick up a file before committing:
+```bash
+git check-attr filter -- "01_data/03_large_files_LFS/my_file.csv"
+# Expected: filter: lfs   (if "unspecified", the LFS rule is missing)
+```
 
 ### If Cloning This Repository
 
@@ -79,7 +87,7 @@ If you're using this as a template and need to set up a new repo:
 
 ### Adding Large Files
 
-Simply add files to the `01 - Data/01 - Large Files/` directory and commit normally:
+Simply add files to the `01_data/03_large_files_LFS/` directory and commit normally:
 
 Git LFS handles everything automatically - no special commands needed!
 
@@ -88,7 +96,7 @@ Git LFS handles everything automatically - no special commands needed!
 
 ```bash
 # See which commits modified LFS files
-git log --follow -- "01 - Data/01 - Large Files/my_file.csv"
+git log --follow -- "01_data/03_large_files_LFS/my_file.csv"
 ```
 
 ## Important Notes
@@ -140,7 +148,7 @@ git lfs pull
 git lfs ls-files | grep "filename"
 
 # Or examine the file directly
-cat "01 - Data/01 - Large Files/myfile.csv" | head -5
+cat "01_data/03_large_files_LFS/myfile.csv" | head -5
 ```
 
 If it shows `version https://git-lfs.github.com/spec/v1`, it's an LFS pointer.
@@ -155,7 +163,7 @@ If it shows `version https://git-lfs.github.com/spec/v1`, it's an LFS pointer.
 
 Once Git LFS is installed and configured (one-time setup), it works quietly:
 
-1. Add files to `01 - Data/01 - Large Files/`
+1. Add files to `01_data/03_large_files_LFS/`
 2. Commit and push normally
 3. Git automatically handles LFS routing
 4. Collaborators automatically get large files when they clone/pull
